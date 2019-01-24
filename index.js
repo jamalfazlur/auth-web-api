@@ -4,11 +4,14 @@ var cors = require('cors');
 var mysql = require('mysql');
 var Crypto = require('crypto');
 var app = express();
+var bearerToken = require('express-bearer-token');
 
 var port = process.env.PORT || 1991;
 
 app.use(bodyParser.json());
 app.use(cors());
+
+app.use(bearerToken());
 
 app.get('/', (req, res) => {
     res.send("<h2>Selamat datang di WEB-API</h2>")
@@ -23,8 +26,12 @@ app.get('/testencrypt', (req,res) => {
             <br>Telah di-Encrypt menjadi: <b>${hash}</b>`)
 })
 
-const { authRouter } = require('./routers')
+const { 
+    authRouter ,
+    adminRouter
+} = require('./routers')
 
 app.use('/auth', authRouter)
+app.use('/admin', adminRouter)
 
 app.listen(port, () => console.log(`Open API -> \n http://localhost:${port}`));
